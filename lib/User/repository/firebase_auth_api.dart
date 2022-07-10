@@ -22,4 +22,10 @@ class FirebaseAuthAPI {
     // Once signed in, return the UserCredential
     return user;
   }
+
+  void signOutWithGoogle() async {
+    await _auth.signOut().then((onValue) => print("The session was closed."));
+    await googleSignIn.signOut();
+    print("All sessions were closed");
+  }
 }
