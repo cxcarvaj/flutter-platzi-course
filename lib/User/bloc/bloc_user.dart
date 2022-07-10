@@ -2,6 +2,8 @@
 import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 import 'package:platzi_trips_app/User/repository/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../model/user.dart';
+import '../repository/cloud_firestore_repository.dart';
 
 class UserBloc implements Bloc {
   final _auth_repository = AuthRepository();
@@ -14,6 +16,11 @@ class UserBloc implements Bloc {
   Future<UserCredential> signIn() {
     return _auth_repository.signInFirebase();
   }
+
+  // 2. Registrar usuario en la FirestoreDB
+  final _cloudFirestoreRepository = CloudFirestoreRepository();
+  void updateUserData(UserModel user) =>
+      _cloudFirestoreRepository.updateUserDataFirestore(user);
 
   void signOut() {
     _auth_repository.signOut();

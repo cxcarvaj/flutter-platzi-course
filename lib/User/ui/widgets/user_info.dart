@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:platzi_trips_app/User/model/user.dart';
 
 class UserInfo extends StatelessWidget {
-  final User user;
+  final UserModel user;
 
   UserInfo(this.user);
 

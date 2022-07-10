@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:platzi_trips_app/User/bloc/bloc_user.dart';
+import 'package:platzi_trips_app/User/model/user.dart';
 import 'package:platzi_trips_app/platzi_trips_cupertino.dart';
 import 'package:platzi_trips_app/widgets/button_green.dart';
 import 'package:platzi_trips_app/widgets/gradient_back.dart';
@@ -54,7 +56,15 @@ class _SignInScreen extends State<SignInScreen> {
                 text: 'Login with Gmail',
                 onPressed: () {
                   userBloc.signOut();
-                  userBloc.signIn();
+                  userBloc.signIn().then((value) {
+                    print(value.user);
+                    userBloc.updateUserData(UserModel(
+                      uid: value.user!.uid.toString(),
+                      name: value.user!.displayName.toString(),
+                      email: value.user!.email.toString(),
+                      photoURL: value.user!.photoURL.toString(),
+                    ));
+                  });
                 },
                 height: 50.0,
                 width: 500.0,

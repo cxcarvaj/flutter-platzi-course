@@ -43,7 +43,7 @@ Widget showProfileData(AsyncSnapshot snapshot) {
   } else {
     print('User has logged in');
     // print(snapshot.data);
-    final user = User(
+    final user = UserModel(
         name: snapshot.data.displayName,
         email: snapshot.data.email,
         photoURL: snapshot.data.photoURL);
