@@ -40,17 +40,25 @@ class _SignInScreen extends State<SignInScreen> {
       body: Stack(
         alignment: Alignment.center,
         children: [
-          GradientBack(title: '', height: MediaQuery.of(context).size.height),
+          GradientBack(
+            height: null,
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Welcome \n This is your Travel App",
-                style: TextStyle(
-                    fontSize: 37.0,
-                    fontFamily: "Lato",
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
+              Flexible(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                    " Welcome \n This is your Travel App",
+                    style: TextStyle(
+                      fontSize: 37.0,
+                      fontFamily: "Lato",
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
               ButtonGreen(
                 text: 'Login with Gmail',
