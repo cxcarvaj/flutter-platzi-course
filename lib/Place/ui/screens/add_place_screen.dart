@@ -1,11 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 import 'package:platzi_trips_app/Place/ui/widgets/card_image.dart';
 import 'package:platzi_trips_app/Place/ui/widgets/title_input_location.dart';
+import 'package:platzi_trips_app/User/bloc/bloc_user.dart';
 import 'package:platzi_trips_app/widgets/button_purple.dart';
 import 'package:platzi_trips_app/widgets/gradient_back.dart';
 import 'package:platzi_trips_app/widgets/text_input.dart';
 import 'package:platzi_trips_app/widgets/title_header.dart';
+
+import '../../model/place.dart';
 
 class AddPlaceScreen extends StatefulWidget {
   File image;
@@ -19,6 +23,7 @@ class AddPlaceScreen extends StatefulWidget {
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
   @override
   Widget build(BuildContext context) {
+    UserBloc userBloc = BlocProvider.of(context);
     final _controllerTitlePlace = TextEditingController();
     final _controllerDescriptionPlace = TextEditingController();
 
@@ -61,7 +66,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                   Container(
                     alignment: Alignment.center,
                     child: CardImageWithFabIcon(
-                        pathImage: "assets/img/sunset.jpeg",
+                        pathImage: widget.image.path,
                         // widget.image.path,
                         width: 350,
                         height: 250,
@@ -93,13 +98,26 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                   ),
                   Container(
                     width: 70,
-                    child: ButtonPurple(buttonText: 'Add Place', onPressed: (){
-                      // Steps:
-                      // 1. Upload the image to firebase storage
-                      // 2. Get the url of the image
-                      // 3. Use Firebase Cloud Firestore to save the place
-                      // 4. Place - title, descriptiopn, url, userOwner, likes
-                    }),
+                    child: ButtonPurple(
+                        buttonText: 'Add Place',
+                        onPressed: () {
+                          // Steps:
+                          // 1. Upload the image to firebase storage
+                          // 2. Get the url of the image
+                          // 3. Use Firebase Cloud Firestore to save the place
+                          // 4. Place - title, descriptiopn, url, userOwner, likes
+                          userBloc
+                              .updateUserPlaceData(Place(
+                            name: _controllerTitlePlace.text,
+                            description: _controllerDescriptionPlace.text,
+                            likes: 0,
+                            urlImage: '',
+                          ))
+                              .whenComplete(() {
+                            print('Termino');
+                            Navigator.pop(context);
+                          });
+                        }),
                   )
                 ],
               )),

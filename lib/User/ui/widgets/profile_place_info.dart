@@ -73,7 +73,7 @@ class ProfilePlaceInfo extends StatelessWidget {
       children: <Widget>[
         card,
         FloatingActionButtonGreen(
-          iconData: Icons.cabin,
+          iconData: Icons.favorite_border,
           onPressed: () {},
         )
       ],

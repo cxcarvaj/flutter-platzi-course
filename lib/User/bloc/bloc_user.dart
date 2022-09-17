@@ -1,7 +1,9 @@
 // bloc library:
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 import 'package:platzi_trips_app/User/repository/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../Place/model/place.dart';
 import '../model/user.dart';
 import '../repository/cloud_firestore_repository.dart';
 
@@ -21,6 +23,9 @@ class UserBloc implements Bloc {
   final _cloudFirestoreRepository = CloudFirestoreRepository();
   void updateUserData(UserModel user) =>
       _cloudFirestoreRepository.updateUserDataFirestore(user);
+
+  Future<DocumentReference<Object?>> updateUserPlaceData(Place place) =>
+      _cloudFirestoreRepository.updatePlaceData(place);
 
   void signOut() {
     _auth_repository.signOut();
