@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 import 'package:platzi_trips_app/Place/ui/widgets/card_image.dart';
@@ -100,23 +102,36 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                     width: 70,
                     child: ButtonPurple(
                         buttonText: 'Add Place',
-                        onPressed: () {
+                        onPressed: () async {
                           // Steps:
                           // 1. Upload the image to firebase storage
                           // 2. Get the url of the image
-                          // 3. Use Firebase Cloud Firestore to save the place
-                          // 4. Place - title, descriptiopn, url, userOwner, likes
-                          userBloc
-                              .updateUserPlaceData(Place(
-                            name: _controllerTitlePlace.text,
-                            description: _controllerDescriptionPlace.text,
-                            likes: 0,
-                            urlImage: '',
-                          ))
-                              .whenComplete(() {
-                            print('Termino');
-                            Navigator.pop(context);
-                          });
+                          User? user = await userBloc.currentUser();
+                          if (user != null) {
+                            String uid = user.uid;
+                            String path =
+                                "$uid/${DateTime.now().toString()}.jpg";
+                            UploadTask uploadTask =
+                                await userBloc.uploadFile(path, widget.image);
+                            print('llegó hasta aquí');
+                            String urlImage = uploadTask.snapshot.ref
+                                .getDownloadURL()
+                                .toString();
+                            print(urlImage);
+                            // 3. Use Firebase Cloud Firestore to save the place
+                            // 4. Place - title, descriptiopn, url, userOwner, likes
+                            await userBloc
+                                .updateUserPlaceData(Place(
+                              name: _controllerTitlePlace.text,
+                              description: _controllerDescriptionPlace.text,
+                              likes: 0,
+                              urlImage: urlImage,
+                            ))
+                                .whenComplete(() {
+                              print('Termino');
+                              Navigator.pop(context);
+                            });
+                          }
                         }),
                   )
                 ],
