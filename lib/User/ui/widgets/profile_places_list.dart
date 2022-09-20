@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:generic_bloc_provider/generic_bloc_provider.dart';
+import 'package:platzi_trips_app/User/bloc/bloc_user.dart';
 import 'profile_place.dart';
 import 'package:platzi_trips_app/Place/model/place.dart';
 
 class ProfilePlacesList extends StatelessWidget {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  late UserBloc userBloc;
   Place place = Place(
     name: "Knuckles Mountains Range",
     description: "Hiking. Water fall hunting. Natural bath",
@@ -20,14 +24,74 @@ class ProfilePlacesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    userBloc = BlocProvider.of<UserBloc>(context);
     return Container(
       margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0, bottom: 10.0),
-      child: Column(
-        children: <Widget>[
-          ProfilePlace(place),
-          ProfilePlace(place2),
-        ],
-      ),
+      child: StreamBuilder(
+          stream: userBloc.placesStream,
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                    "Error al obtener el sanpshot de Places de CloudFirestore"),
+              );
+            }
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return CircularProgressIndicator();
+              case ConnectionState.done:
+                if (snapshot.data!.docs.isNotEmpty) {
+                  return Column(
+                    children: userBloc.buildPlaces(snapshot.data!.docs),
+                  );
+                } else {
+                  print("Done: Snapshot: ${snapshot.data!.docs}");
+                  return Center(
+                      child: Text(
+                          "Done: No tienes Places agregados aún, comienza agregando uno",
+                          maxLines: 2,
+                          textAlign: TextAlign.left));
+                }
+              case ConnectionState.active:
+                if (snapshot.data!.docs.isNotEmpty) {
+                  return Column(
+                    children: userBloc.buildPlaces(snapshot.data!.docs),
+                  );
+                } else {
+                  print("Active: Snapshot: ${snapshot.data!.docs}");
+                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  //   content: Text("Agregaste a tus Favoritos"),
+                  // ));
+                  return Center(
+                      child: Text(
+                          "Active: No tienes Places agregados aún, comienza agregando uno",
+                          maxLines: 2,
+                          textAlign: TextAlign.left));
+                }
+              case ConnectionState.none:
+                return CircularProgressIndicator();
+              default:
+                if (snapshot.data!.docs.isNotEmpty) {
+                  return Column(
+                    children: userBloc.buildPlaces(snapshot.data!.docs),
+                  );
+                } else {
+                  print("None: Snapshot: ${snapshot.data!.docs}");
+                  return Center(
+                      child: Text(
+                          "None: No tienes Places agregados aún, comienza agregando uno",
+                          maxLines: 2,
+                          textAlign: TextAlign.left));
+                }
+            }
+          }
+          // return Column(
+          //   children: [
+          //     ProfilePlace(place),
+          //     ProfilePlace(place2),
+          //   ],
+          // );
+          ),
     );
   }
 }

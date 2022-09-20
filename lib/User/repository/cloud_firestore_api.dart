@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:platzi_trips_app/User/ui/widgets/profile_place.dart';
 
 import '../../Place/model/place.dart';
 import '../model/user.dart';
@@ -32,6 +33,7 @@ class CloudFirestoreAPI {
       'name': place.name,
       'description': place.description,
       'likes': place.likes,
+      'urlImage': place.urlImage,
       'userOwner': _firestoreDB.doc("$USERS/${currentUser.uid}"),
     });
     DocumentSnapshot<Object?> placeSnapshot = await newPlaceRef.get();
@@ -42,4 +44,16 @@ class CloudFirestoreAPI {
       'myPlaces': FieldValue.arrayUnion([_firestoreDB.doc("$PLACES/$placeId")])
     });
   }
+
+  List<ProfilePlace> buildPlaces(List<DocumentSnapshot> placesListSnapshot) =>
+      placesListSnapshot
+          .map((p) => ProfilePlace(
+                Place(
+                  name: p.get('name'),
+                  description: p.get('description'),
+                  likes: p.get('likes'),
+                  urlImage: p.get('urlImage'),
+                ),
+              ))
+          .toList();
 }

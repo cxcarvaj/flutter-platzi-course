@@ -114,10 +114,9 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                             UploadTask uploadTask =
                                 await userBloc.uploadFile(path, widget.image);
                             print('llegó hasta aquí');
-                            String urlImage = uploadTask.snapshot.ref
-                                .getDownloadURL()
-                                .toString();
-                            print(urlImage);
+                            String urlImage = await (await uploadTask)
+                                .ref
+                                .getDownloadURL(); //url de la imagen
                             // 3. Use Firebase Cloud Firestore to save the place
                             // 4. Place - title, descriptiopn, url, userOwner, likes
                             await userBloc
