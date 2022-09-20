@@ -74,9 +74,19 @@ class CloudFirestoreAPI {
             height: height,
             marginLeft: marginLeft,
             iconData: iconData,
-            onPressedFabIcon: () {},
+            onPressedFabIcon: () => likePlace(p.id),
           ),
         )
         .toList();
+  }
+
+  Future<void> likePlace(String idPlace) async {
+    _firestoreDB.runTransaction((transaction) async {
+      DocumentSnapshot placeDS =
+          await _firestoreDB.collection(this.PLACES).doc(idPlace).get();
+      print(placeDS);
+      transaction
+          .update(placeDS.reference, {"likes": placeDS.get('likes') + 1});
+    });
   }
 }
