@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:platzi_trips_app/Place/model/place.dart';
+import '../../../Place/model/place.dart';
 import 'profile_place_info.dart';
-import 'profile_place.dart';
 
 class ProfilePlace extends StatelessWidget {
   Place place;
@@ -13,9 +12,24 @@ class ProfilePlace extends StatelessWidget {
     final photoCard = Container(
       margin: EdgeInsets.only(top: 10.0, bottom: 70.0),
       height: 220.0,
+      child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Image.network(
+            place.urlImage,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                  child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+              ));
+            },
+          )),
       decoration: BoxDecoration(
-          image: DecorationImage(
-              fit: BoxFit.cover, image: NetworkImage(place.urlImage)),
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           color: Colors.red,
           boxShadow: <BoxShadow>[
