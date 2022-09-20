@@ -25,14 +25,21 @@ class CloudFirestoreAPI {
     }, SetOptions(merge: true));
   }
 
-  Future<DocumentReference<Object?>> updatePlaceData(Place place) async {
+  Future<void> updatePlaceData(Place place) async {
     CollectionReference refPlaces = _firestoreDB.collection(PLACES);
     User currentUser = _auth.currentUser!;
-    return await refPlaces.add({
+    DocumentReference<Object?> newPlaceRef = await refPlaces.add({
       'name': place.name,
       'description': place.description,
       'likes': place.likes,
-      'userOwner': "$USERS/${currentUser.uid}",
+      'userOwner': _firestoreDB.doc("$USERS/${currentUser.uid}"),
+    });
+    DocumentSnapshot<Object?> placeSnapshot = await newPlaceRef.get();
+    String placeId = placeSnapshot.id; // ID del Place que se acaba de asignar
+    DocumentReference<Object?> refUsers =
+        _firestoreDB.collection(USERS).doc(currentUser.uid);
+    refUsers.update({
+      'myPlaces': FieldValue.arrayUnion([_firestoreDB.doc("$PLACES/$placeId")])
     });
   }
 }

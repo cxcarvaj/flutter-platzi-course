@@ -1,7 +1,6 @@
 // bloc library:
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 import 'package:platzi_trips_app/User/repository/auth_repository.dart';
@@ -32,7 +31,7 @@ class UserBloc implements Bloc {
   void updateUserData(UserModel user) =>
       _cloudFirestoreRepository.updateUserDataFirestore(user);
 
-  Future<DocumentReference<Object?>> updateUserPlaceData(Place place) =>
+  Future<void> updateUserPlaceData(Place place) =>
       _cloudFirestoreRepository.updatePlaceData(place);
 
   final _firebaseStorageRepository = FirebaseStorageRepository();
