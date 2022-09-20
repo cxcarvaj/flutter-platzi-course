@@ -46,7 +46,7 @@ class ProfilePlacesList extends StatelessWidget {
               case ConnectionState.done:
                 if (snapshot.data!.docs.isNotEmpty) {
                   return Column(
-                    children: userBloc.buildPlaces(snapshot.data!.docs),
+                    children: userBloc.buildMyPlaces(snapshot.data!.docs),
                   );
                 } else {
                   print("Done: Snapshot: ${snapshot.data!.docs}");
@@ -59,7 +59,7 @@ class ProfilePlacesList extends StatelessWidget {
               case ConnectionState.active:
                 if (snapshot.data!.docs.isNotEmpty) {
                   return Column(
-                    children: userBloc.buildPlaces(snapshot.data!.docs),
+                    children: userBloc.buildMyPlaces(snapshot.data!.docs),
                   );
                 } else {
                   print("Active: Snapshot: ${snapshot.data!.docs}");
@@ -77,7 +77,7 @@ class ProfilePlacesList extends StatelessWidget {
               default:
                 if (snapshot.data!.docs.isNotEmpty) {
                   return Column(
-                    children: userBloc.buildPlaces(snapshot.data!.docs),
+                    children: userBloc.buildMyPlaces(snapshot.data!.docs),
                   );
                 } else {
                   print("None: Snapshot: ${snapshot.data!.docs}");

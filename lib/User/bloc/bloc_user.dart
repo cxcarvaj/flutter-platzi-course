@@ -8,6 +8,7 @@ import 'package:platzi_trips_app/User/repository/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../Place/model/place.dart';
 import '../../Place/repository/firebase_storage_repository.dart';
+import '../../Place/ui/widgets/card_image.dart';
 import '../model/user.dart';
 import '../repository/cloud_firestore_api.dart';
 import '../repository/cloud_firestore_repository.dart';
@@ -44,8 +45,8 @@ class UserBloc implements Bloc {
 
   Stream<QuerySnapshot> get placesStream => placesListStream;
 
-  List<ProfilePlace> buildPlaces(List<DocumentSnapshot> placesListSnapshot) =>
-      _cloudFirestoreRepository.buildPlaces(placesListSnapshot);
+  List<CardImageWithFabIcon> buildPlaces(
+      List<DocumentSnapshot> placesListSnapshot) => _cloudFirestoreRepository.buildPlaces(placesListSnapshot);
 
   Stream<QuerySnapshot> myPlacesListStream(String uid) => FirebaseFirestore
       .instance
@@ -54,6 +55,9 @@ class UserBloc implements Bloc {
           isEqualTo: FirebaseFirestore.instance
               .doc("${CloudFirestoreAPI().USERS}/$uid"))
       .snapshots();
+
+  List<ProfilePlace> buildMyPlaces(List<DocumentSnapshot> placesListSnapshot) =>
+      _cloudFirestoreRepository.buildMyPlaces(placesListSnapshot);
 
   final _firebaseStorageRepository = FirebaseStorageRepository();
   Future<UploadTask> uploadFile(String path, File image) =>

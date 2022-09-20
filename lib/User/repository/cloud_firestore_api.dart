@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:platzi_trips_app/User/ui/widgets/profile_place.dart';
 
 import '../../Place/model/place.dart';
+import '../../Place/ui/widgets/card_image.dart';
 import '../model/user.dart';
 
 class CloudFirestoreAPI {
@@ -45,7 +47,7 @@ class CloudFirestoreAPI {
     });
   }
 
-  List<ProfilePlace> buildPlaces(List<DocumentSnapshot> placesListSnapshot) =>
+  List<ProfilePlace> buildMyPlaces(List<DocumentSnapshot> placesListSnapshot) =>
       placesListSnapshot
           .map((p) => ProfilePlace(
                 Place(
@@ -56,4 +58,25 @@ class CloudFirestoreAPI {
                 ),
               ))
           .toList();
+
+  List<CardImageWithFabIcon> buildPlaces(
+      List<DocumentSnapshot> placesListSnapshot) {
+    double width = 300.0;
+    double height = 250.0;
+    double marginLeft = 20.0;
+    IconData iconData = Icons.favorite_border;
+
+    return placesListSnapshot
+        .map(
+          (p) => CardImageWithFabIcon(
+            pathImage: p.get('urlImage'),
+            width: width,
+            height: height,
+            marginLeft: marginLeft,
+            iconData: iconData,
+            onPressedFabIcon: () {},
+          ),
+        )
+        .toList();
+  }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:platzi_trips_app/widgets/floating_action_button_green.dart';
 
@@ -28,8 +30,10 @@ class CardImageWithFabIcon extends StatelessWidget {
       width: width,
       margin: EdgeInsets.only(left: marginLeft),
       decoration: BoxDecoration(
-          image:
-              DecorationImage(fit: BoxFit.cover, image: AssetImage(pathImage)),
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: pictureValidation(pathImage),
+          ),
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
           shape: BoxShape.rectangle,
           boxShadow: <BoxShadow>[
@@ -50,5 +54,15 @@ class CardImageWithFabIcon extends StatelessWidget {
         )
       ],
     );
+  }
+
+  ImageProvider pictureValidation(String pathImage) {
+    if (pathImage.contains('http')) {
+      return NetworkImage(pathImage);
+    } else if (pathImage.contains("assets")) {
+      return AssetImage(pathImage);
+    } else {
+      return new FileImage(new File(pathImage));
+    }
   }
 }
